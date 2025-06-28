@@ -24,10 +24,4 @@ public class MyBatisUtil {
     public static SqlSession getSession() {
         return sqlSessionFactory.openSession();
     }
-
-    public static void closeSession(SqlSession session) {
-        if (session != null) {
-            session.close();
-        }
-    }
 }

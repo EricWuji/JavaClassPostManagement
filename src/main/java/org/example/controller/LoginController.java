@@ -21,8 +21,7 @@ public class LoginController {
                 return null; // User not found
             }
             if (passwordInSql.equals(password)) {
-                User user = userMapper.getUserByUserName(userName);
-                return user; // Successful login
+                return userMapper.getUserByUserName(userName); // Successful login
             } else {
                 return null; // Incorrect password
             }
