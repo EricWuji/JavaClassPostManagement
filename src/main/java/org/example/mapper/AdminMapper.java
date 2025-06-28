@@ -36,17 +36,6 @@ public interface AdminMapper {
     List<Post> getPostsByDirectoryIdAndUserId(@Param("directoryId") int directoryId, @Param("userId") int userId);
 
     @Results({
-            @Result(property = "postId", column = "post_id"),
-            @Result(property = "postContent", column = "post_content"),
-            @Result(property = "userId", column = "user_id"),
-            @Result(property = "directoryId", column = "directory_id"),
-            @Result(property = "fromAdmin", column = "from_admin"),
-            @Result(property = "topped", column = "topped")
-    })
-    @Select("select * from post where directory_id = #{directoryId}")
-    List<Post> getPostsByDirectoryId(@Param("directoryId") int directoryId);
-
-    @Results({
             @Result(property = "commentId", column = "comment_id"),
             @Result(property = "commentContent", column = "comment_content"),
             @Result(property = "postId", column = "post_id"),
@@ -90,12 +79,6 @@ public interface AdminMapper {
     })
     @Select("select u.user_id, u.user_name, u.password from user u join joining j on u.user_id = j.user_id where j.directory_id = #{directoryId} and j.banned = 1")
     List<User> getBannedUsersByDirectoryId(@Param("directoryId") int directoryId);
-
-    @Select("select password from admin where admin_name = #{userName}")
-    String getPasswordByUserName(@Param("userName") String userName);
-
-    @Select("select admin_id from admin where admin_name = #{userName}")
-    int getUserIdByUserName(@Param("userName") String userName);
 
     @Select("select admin_name from admin where admin_id = #{userId}")
     String getAdminNameById(@Param("userId") int userId);
