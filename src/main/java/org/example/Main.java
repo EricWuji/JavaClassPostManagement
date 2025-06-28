@@ -158,10 +158,8 @@ public class Main {
             int adminChoice = sc.nextInt();
             sc.nextLine(); // Consume newline
             switch (adminChoice) {
-                case 1 -> {
-                    // Logic to view all posts
-                    admin.displayAllPosts();
-                }
+                case 1 -> // Logic to view all posts
+                        admin.displayAllPosts();
                 case 2 -> {
                     // Logic to create a post
                     System.out.println("Enter post content:");
