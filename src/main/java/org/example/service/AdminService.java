@@ -1,6 +1,7 @@
 package org.example.service;
 
 import org.example.entity.Admin;
+import org.example.entity.Comment;
 import org.example.entity.NormalUser;
 import org.example.entity.Post;
 

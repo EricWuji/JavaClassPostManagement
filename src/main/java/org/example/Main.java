@@ -171,7 +171,7 @@ public class Main {
             System.out.println("8. Top Post");
             System.out.println("9. Unban User");
             System.out.println("10. Untop post");
-            System.out.println("11. Exit");
+            System.out.println("11. Exit Admin Menu");
             int adminChoice = sc.nextInt();
             sc.nextLine(); // Consume newline
             switch (adminChoice) {

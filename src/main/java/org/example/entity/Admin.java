@@ -61,7 +61,7 @@ public class Admin extends User {
     public List<Comment> getAllComments() {
         try (SqlSession session = MyBatisUtil.getSession()) {
             AdminMapper adminMapper = session.getMapper(AdminMapper.class);
-            List<Comment> comments = adminMapper.getCommentsByUserId(userId);
+            List<Comment> comments = adminMapper.getAllCommentsInDirectory(directoryId);
             return comments != null ? comments : List.of();
         }
     }
