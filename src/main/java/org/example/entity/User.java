@@ -33,8 +33,4 @@ public class User {
     public List<Comment> getAllComments() {
         return null;
     }
-
-    public void displayAllPosts(boolean showComments) {
-
-    }
 }
