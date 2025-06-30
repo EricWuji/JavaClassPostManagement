@@ -2,8 +2,10 @@ package org.example;
 
 import org.example.controller.LoginController;
 import org.example.entity.Admin;
-import org.example.entity.User;
+import org.example.entity.NormalUser;
 import org.example.filter.Filter;
+import org.example.service.AdminService;
+import org.example.service.UserService;
 import org.example.utils.DirectoryUtils;
 
 import java.util.Scanner;
@@ -27,10 +29,10 @@ public class Main {
                     System.out.println("Please enter your password:");
                     String password = sc.next();
                     sc.nextLine(); // Consume newline
-                    User user = loginController.loginUser(userName, password);
-                    if (user != null) {
+                    NormalUser normalUser = loginController.loginUser(userName, password);
+                    if (normalUser != null) {
                         System.out.println("Login successful! Welcome, " + userName + "!");
-                        userFunction(user, sc); // Proceed to user functionalities
+                        userFunction(normalUser, sc); // Proceed to user functionalities
                     } else {
                         System.out.println("Login failed. Please check your username and password.");
                     }
@@ -59,7 +61,8 @@ public class Main {
         }
     }
 
-    public static void userFunction(User user, Scanner sc) {
+    public static void userFunction(NormalUser normalUser, Scanner sc) {
+        UserService userService = new UserService(normalUser);
         while (true) {
             System.out.println("-------------------------------------------------------------------------------------");
             System.out.println("User Menu:");
@@ -69,7 +72,8 @@ public class Main {
             System.out.println("4. Comment on Post");
             System.out.println("5. Delete Comment");
             System.out.println("6. join a Directory");
-            System.out.println("7. Exit");
+            System.out.println("7. logout from Directory");
+            System.out.println("8. Exit");
             int userChoice = sc.nextInt();
             sc.nextLine(); // Consume newline
             switch (userChoice) {
@@ -77,10 +81,10 @@ public class Main {
                     // Logic to view posts
                     System.out.println("Viewing posts...");
                     // Call method to fetch and display posts
-                    user.displayAllPosts(true);
+                    userService.displayAllPosts(true);
                 }
                 case 2 -> {
-                    // Logic to create a post
+                    // Logic to create a posts
                     System.out.println("Enter post content:");
                     String postContent = sc.nextLine();
                     postContent = Filter.filter(postContent);
@@ -88,49 +92,60 @@ public class Main {
                     String directoryName = sc.nextLine();
                     Integer directoryId = DirectoryUtils.getDirectoryIdByName(directoryName);
                     if (directoryId != null) {
-                        user.TryToPost(postContent, directoryId);
+                        userService.tryToPost(postContent, directoryId);
                     } else {
                         System.out.println("Directory not found.");
                     }
                 }
                 case 3 -> {
                     // Logic to delete a post
-                    user.displayAllPosts(false);
+                    userService.displayAllPosts(false);
                     System.out.println("Enter post ID to delete:");
                     int postId = sc.nextInt();
                     sc.nextLine(); // Consume newline
-                    user.tryToDeletePost(postId);
+                    userService.tryToDeletePost(postId);
                 }
                 case 4 -> {
                     // Logic to comment on a post
-                    user.displayAllPosts(false);
+                    userService.displayAllPosts(false);
                     System.out.println("Enter post ID to comment on:");
                     int postId = sc.nextInt();
                     sc.nextLine(); // Consume newline
                     System.out.println("Enter your comment:");
                     String content = sc.nextLine();
                     content = Filter.filter(content);
-                    user.TryToComment(content, postId);
+                    userService.TryToComment(content, postId);
                 }
                 case 5 -> {
                     // Logic to delete a comment
-                    user.displayAllComments();
+                    userService.displayAllComments();
                     System.out.println("Enter comment ID to delete:");
                     int commentId = sc.nextInt();
                     sc.nextLine(); // Consume newline
-                    user.tryToDeleteComment(commentId);
+                    userService.tryToDeleteComment(commentId);
                 }
                 case 6 -> {
                     System.out.println("Enter directory name to join:");
                     String directoryName = sc.nextLine();
                     Integer directoryId = DirectoryUtils.getDirectoryIdByName(directoryName);
                     if (directoryId != null) {
-                        user.joinDirectory(directoryId);
+                        userService.joinDirectory(directoryId);
                     } else {
                         System.out.println("Directory not found.");
                     }
                 }
                 case 7 -> {
+                    // logout from the directory
+                    System.out.println("Enter directory name to logout:");
+                    String directoryName = sc.nextLine();
+                    Integer directoryId = DirectoryUtils.getDirectoryIdByName(directoryName);
+                    if (directoryId != null) {
+                        userService.LogoutFromDirectory(directoryId);
+                    } else {
+                        System.out.println("Directory not found.");
+                    }
+                }
+                case 8 -> {
                     // Exit user menu
                     System.out.println("Exiting user menu. Goodbye!");
                     return;
@@ -141,7 +156,8 @@ public class Main {
     }
 
     public static void adminFunction(Admin admin, Scanner sc) {
-        System.out.println(admin);
+        AdminService adminService = new AdminService(admin);
+//        System.out.println(admin);
         while (true) {
             System.out.println("-------------------------------------------------------------------------------------");
             System.out.println("Admin Menu:");
@@ -154,48 +170,52 @@ public class Main {
             System.out.println("7. View All Users in Directory");
             System.out.println("8. Top Post");
             System.out.println("9. Unban User");
-            System.out.println("10. Exit");
+            System.out.println("10. Untop post");
+            System.out.println("11. Exit");
             int adminChoice = sc.nextInt();
             sc.nextLine(); // Consume newline
             switch (adminChoice) {
                 case 1 -> // Logic to view all posts
-                        admin.displayAllPosts();
+                        adminService.displayAllPosts(true);
                 case 2 -> {
                     // Logic to create a post
-                    System.out.println("Enter post content:");
-                    String postContent = sc.nextLine();
-                    System.out.println("Enter directory name:");
-                    String directoryName = sc.nextLine();
-                    Integer directoryId = DirectoryUtils.getDirectoryIdByName(directoryName);
-                    if (directoryId != null) {
-                        admin.post(postContent, admin.getUserId(), directoryId);
-                        System.out.println("Post created successfully.");
-                    } else {
-                        System.out.println("Directory not found.");
-                    }
+                    adminService.tryToPost(sc);
                 }
-                case 3 -> // Logic to delete a post
-                        admin.tryToDeletePost(sc);
+                case 3 -> {
+                    // Logic to delete a post
+                    adminService.displayAllPosts(false);
+                    System.out.println("Enter post ID to delete:");
+                    int postId = sc.nextInt();
+                    sc.nextLine(); // Consume newline
+                    adminService.tryToDeletePost(postId);
+                }
                 case 4 -> {
                     // Logic to comment on a post
-                    admin.displayAllPosts();
+                    adminService.displayAllPosts(false);
                     System.out.println("Enter post ID to comment on:");
                     int postId = sc.nextInt();
                     sc.nextLine(); // Consume newline
                     System.out.println("Enter your comment:");
                     String content = sc.nextLine();
-                    admin.comment(content, admin.getUserId(), postId);
+                    adminService.TryToComment(content, postId);
                 }
-                case 5 -> // Logic to delete a comment
-                        admin.tryToDeleteComment(sc);
+                case 5 -> {
+                    // Logic to delete a comment
+                    adminService.displayAllComments();
+                    System.out.println("Enter comment ID to delete:");
+                    int commentId = sc.nextInt();
+                    sc.nextLine(); // Consume newline
+                    adminService.tryToDeleteComment(commentId);
+                }
                 case 6 -> // Logic to ban a user
-                        admin.tryToBanUser(sc);
+                        adminService.tryToBanUser(sc);
                 case 7 -> // Logic to view all users in directory
-                        admin.displayAllUsersByDirectoryId();
+                        adminService.displayAllUsersByDirectoryId();
                 case 8 -> // Logic to top a post
-                        admin.tryToTopPost(sc);
-                case 9 -> admin.tryToUnbanUser(sc);
-                case 10 -> {
+                        adminService.tryToPost(sc); // Assuming this method remains on Admin entity for now
+                case 9 -> adminService.tryToUnbanUser(sc);
+                case 10 -> adminService.unTopPost(sc);
+                case 11 -> {
                     // Exit admin menu
                     System.out.println("Exiting admin menu. Goodbye!");
                     return;

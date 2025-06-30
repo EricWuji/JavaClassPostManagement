@@ -4,7 +4,7 @@ import org.apache.ibatis.annotations.*;
 import org.example.entity.Admin;
 import org.example.entity.Comment;
 import org.example.entity.Post;
-import org.example.entity.User;
+import org.example.entity.NormalUser;
 
 import java.util.List;
 
@@ -32,8 +32,8 @@ public interface AdminMapper {
             @Result(property = "fromAdmin", column = "from_admin"),
             @Result(property = "topped", column = "topped")
     })
-    @Select("select * from post where directory_id = #{directoryId} and from_admin = 1 and user_id = #{userId}")
-    List<Post> getPostsByDirectoryIdAndUserId(@Param("directoryId") int directoryId, @Param("userId") int userId);
+    @Select("select * from post where directory_id = #{directoryId}")
+    List<Post> getPostsByDirectoryId(@Param("directoryId") int directoryId);
 
     @Results({
             @Result(property = "commentId", column = "comment_id"),
@@ -70,7 +70,7 @@ public interface AdminMapper {
             @Result(property = "password", column = "password")
     })
     @Select("select u.user_id, u.user_name, u.password from user u join joining j on u.user_id = j.user_id where j.directory_id = #{directoryId} and j.banned = 0")
-    List<User> getAllUnbannedUsers(@Param("directoryId") int directoryId);
+    List<NormalUser> getAllUnbannedUsers(@Param("directoryId") int directoryId);
 
     @Results({
             @Result(property = "userId", column = "user_id"),
@@ -78,7 +78,7 @@ public interface AdminMapper {
             @Result(property = "password", column = "password")
     })
     @Select("select u.user_id, u.user_name, u.password from user u join joining j on u.user_id = j.user_id where j.directory_id = #{directoryId} and j.banned = 1")
-    List<User> getBannedUsersByDirectoryId(@Param("directoryId") int directoryId);
+    List<NormalUser> getBannedUsersByDirectoryId(@Param("directoryId") int directoryId);
 
     @Select("select admin_name from admin where admin_id = #{userId}")
     String getAdminNameById(@Param("userId") int userId);
@@ -102,4 +102,7 @@ public interface AdminMapper {
     })
     @Select("select * from admin where admin_name = #{userName}")
     Admin getAdminByUserName(@Param("userName") String userName);
+
+    @Update("update post set topped = 0 where post_id = #{postId}")
+    void UntopPost(int postId);
 }

@@ -3,7 +3,7 @@ package org.example.mapper;
 import org.apache.ibatis.annotations.*;
 import org.example.entity.Comment;
 import org.example.entity.Post;
-import org.example.entity.User;
+import org.example.entity.NormalUser;
 
 import java.util.List;
 
@@ -55,7 +55,7 @@ public interface UserMapper {
             @Result(property = "password", column = "password")
     })
     @Select("select * from user where user_name = #{userName}")
-    User getUserByUserName(@Param("userName") String userName);
+    NormalUser getUserByUserName(@Param("userName") String userName);
 
     @Insert("insert into joining(user_id, directory_id) values (#{userId}, #{directoryId})")
     void joinDirectory(@Param("userId") int userId, @Param("directoryId") int directoryId);
@@ -65,4 +65,7 @@ public interface UserMapper {
 
     @Select("select count(*) > 0 from joining where user_id = #{userId} and directory_id = #{directoryId}")
     boolean isUserInDirectory(@Param("userId") int userId, @Param("directoryId") int directoryId);
+
+    @Delete("delete from joining where user_id = #{userId} and directory_id = #{directoryId}")
+    void LogoutFromDirectory(@Param("userId") int userId, @Param("directoryId") int directoryId);
 }
