@@ -66,6 +66,14 @@ public class Admin extends User {
         }
     }
 
+    public void TopPost(int postId) {
+        try (SqlSession session = MyBatisUtil.getSession()) {
+            AdminMapper adminMapper = session.getMapper(AdminMapper.class);
+            adminMapper.topPost(postId); // Assuming this method toggles the "topped" status
+            session.commit();
+        }
+    }
+
     public void UntopPost(int postId) {
         try (SqlSession session = MyBatisUtil.getSession()) {
             AdminMapper adminMapper = session.getMapper(AdminMapper.class);

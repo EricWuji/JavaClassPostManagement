@@ -177,10 +177,8 @@ public class Main {
             switch (adminChoice) {
                 case 1 -> // Logic to view all posts
                         adminService.displayAllPosts(true);
-                case 2 -> {
-                    // Logic to create a post
-                    adminService.tryToPost(sc);
-                }
+                case 2 -> // Logic to create a post
+                        adminService.tryToPost(sc);
                 case 3 -> {
                     // Logic to delete a post
                     adminService.displayAllPosts(false);
