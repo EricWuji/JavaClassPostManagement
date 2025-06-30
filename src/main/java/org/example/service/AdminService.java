@@ -1,7 +1,6 @@
 package org.example.service;
 
 import org.example.entity.Admin;
-import org.example.entity.Comment;
 import org.example.entity.NormalUser;
 import org.example.entity.Post;
 
@@ -96,26 +95,6 @@ public class AdminService extends Service {
         if (posts.stream().anyMatch(post -> post.getPostId() == postId)) {
             user.UntopPost(postId);
             System.out.println("Post untopped successfully.");
-        } else {
-            System.out.println("Post not found.");
-        }
-    }
-
-    public void tryToTopPost(Scanner sc) {
-        List<Post> posts = user.getAllPostsByDirectoryId();
-        if (posts.isEmpty()) {
-            System.out.println("No posts in this directory.");
-            return;
-        }
-        for (Post post : posts) {
-            post.display(false);
-        }
-        System.out.println("Enter the post ID to top:");
-        int postId = sc.nextInt();
-        sc.nextLine(); // Consume newline
-        if (posts.stream().anyMatch(post -> post.getPostId() == postId)) {
-            user.TopPost(postId);
-            System.out.println("Post topped successfully.");
         } else {
             System.out.println("Post not found.");
         }

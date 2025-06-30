@@ -42,16 +42,6 @@ public interface AdminMapper {
             @Result(property = "userId", column = "user_id"),
             @Result(property = "fromAdmin", column = "from_admin")
     })
-    @Select("select * from comment where user_id = #{userId} and from_admin = 1")
-    List<Comment> getCommentsByUserId(@Param("userId") int userId);
-
-    @Results({
-            @Result(property = "commentId", column = "comment_id"),
-            @Result(property = "commentContent", column = "comment_content"),
-            @Result(property = "postId", column = "post_id"),
-            @Result(property = "userId", column = "user_id"),
-            @Result(property = "fromAdmin", column = "from_admin")
-    })
     @Select("SELECT c.* FROM comment c JOIN post p ON c.post_id = p.post_id WHERE p.directory_id = #{directoryId}")
     List<Comment> getAllCommentsInDirectory(@Param("directoryId") int directoryId);
 
