@@ -15,7 +15,7 @@ public class SignUpController {
             System.out.println("input your user name:");
             String userName = sc.nextLine();
             sc.nextLine();
-            if (allUserName.stream().filter(name -> name.equals(userName)).count() > 0) {
+            if (allUserName.stream().anyMatch(name -> name.equals(userName))) {
                 System.out.println("user name is already taken.");
                 return ;
             }
