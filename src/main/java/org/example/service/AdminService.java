@@ -99,4 +99,18 @@ public class AdminService extends Service {
             System.out.println("Post not found.");
         }
     }
+
+    public void topPost(Scanner sc) {
+        displayAllPosts(false);
+        List<Post> posts = user.getAllPostsByDirectoryId();
+        System.out.println("Enter the post ID to top:");
+        int postId = sc.nextInt();
+        sc.nextLine(); // Consume newline
+        if (posts.stream().anyMatch(post -> post.getPostId() == postId)) {
+            user.TopPost(postId);
+            System.out.println("Post topped successfully.");
+        } else {
+            System.out.println("Post not found.");
+        }
+    }
 }

@@ -3,7 +3,10 @@ package org.example.service;
 import org.example.entity.Comment;
 import org.example.entity.Post;
 import org.example.entity.User;
+import org.example.filter.Filter;
+
 import java.util.List;
+import java.util.Scanner;
 
 public class Service {
     User user;
@@ -12,7 +15,14 @@ public class Service {
         this.user = user;
     }
 
-    public void TryToComment(String content, int postId) {
+    public void TryToComment(Scanner sc) {
+        displayAllPosts(false);
+        System.out.println("Enter post ID to comment on:");
+        int postId = sc.nextInt();
+        sc.nextLine(); // Consume newline
+        System.out.println("Enter your comment:");
+        String content = sc.nextLine();
+        content = Filter.filter(content);
         if (content == null || content.isEmpty()) {
             System.out.println("Comment content cannot be empty.");
             return;
@@ -20,7 +30,11 @@ public class Service {
         user.comment(content, user.getUserId(), postId);
     }
 
-    public void tryToDeletePost(int postId) {
+    public void tryToDeletePost(Scanner sc) {
+        displayAllPosts(false);
+        System.out.println("Enter post ID to delete:");
+        int postId = sc.nextInt();
+        sc.nextLine(); // Consume newline
         if (postId <= 0) {
             System.out.println("Invalid post ID.");
             return;
@@ -35,7 +49,11 @@ public class Service {
         }
     }
 
-    public void tryToDeleteComment(int commentId) {
+    public void tryToDeleteComment(Scanner sc) {
+        displayAllComments();
+        System.out.println("Enter comment ID to delete:");
+        int commentId = sc.nextInt();
+        sc.nextLine(); // Consume newline
         if (commentId <= 0) {
             System.out.println("Invalid comment ID.");
             return;
@@ -65,6 +83,7 @@ public class Service {
     }
 
     public void displayAllPosts(boolean showComments) {
+        System.out.println("Viewing posts...");
         List<Post> posts = user.getAllPosts();
         List<Post> topPosts = posts.stream().filter(Post::isTopped).toList();
         List<Post> normalPosts = posts.stream().filter(post -> !post.isTopped()).toList();

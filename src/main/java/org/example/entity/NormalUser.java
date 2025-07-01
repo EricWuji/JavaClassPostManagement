@@ -92,4 +92,15 @@ public class NormalUser extends User {
             return userMapper.isUserInDirectory(userId, directoryId);
         }
     }
+
+    public void joinDirectory(int directoryId) {
+        try (SqlSession session = MyBatisUtil.getSession()) {
+            UserMapper userMapper = session.getMapper(UserMapper.class);
+            userMapper.joinDirectory(userId, directoryId);
+            session.commit();
+            System.out.println("Joined directory successfully.");
+        } catch (Exception e) {
+            System.out.println("Failed to join directory: " + e.getMessage());
+        }
+    }
 }

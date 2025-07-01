@@ -68,4 +68,7 @@ public interface UserMapper {
 
     @Delete("delete from joining where user_id = #{userId} and directory_id = #{directoryId}")
     void LogoutFromDirectory(@Param("userId") int userId, @Param("directoryId") int directoryId);
+
+    @Select("select * from user where user_name = #{userName} and password = #{password}")
+    NormalUser getUserByNameAndPassword(@Param("userName") String userName, @Param("password") String password);
 }

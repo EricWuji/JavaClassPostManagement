@@ -1,42 +1,28 @@
 package org.example.controller;
 
-import org.apache.ibatis.session.SqlSession;
 import org.example.entity.Admin;
 import org.example.entity.NormalUser;
-import org.example.mapper.AdminMapper;
-import org.example.mapper.UserMapper;
-import org.example.utils.MyBatisUtil;
+import org.example.utils.UserUtils;
+
+import java.util.Scanner;
 
 public class LoginController {
 
-    public LoginController() {
-        // 构造函数不再需要初始化 mappers
+    public NormalUser loginUser(Scanner sc) {
+        System.out.println("Please enter your username:");
+        String userName = sc.next();
+        System.out.println("Please enter your password:");
+        String password = sc.next();
+        sc.nextLine(); // Consume newline
+        return UserUtils.getUserByNameAndPassword(userName, password);
     }
 
-    public NormalUser loginUser(String userName, String password) {
-        try (SqlSession session = MyBatisUtil.getSession()) {
-            UserMapper userMapper = session.getMapper(UserMapper.class);
-            String passwordInSql = userMapper.getPasswordByUserName(userName);
-            if (passwordInSql == null) {
-                return null; // User not found
-            }
-            if (passwordInSql.equals(password)) {
-                return userMapper.getUserByUserName(userName); // Successful login
-            } else {
-                return null; // Incorrect password
-            }
-        }
-    }
-
-    public Admin loginAdmin(String userName, String password) {
-        try (SqlSession session = MyBatisUtil.getSession()) {
-            AdminMapper adminMapper = session.getMapper(AdminMapper.class);
-            Admin admin = adminMapper.getAdminByUserName(userName);
-            if (admin != null && admin.getPassword().equals(password)) {
-                return admin; // Successful login
-            } else {
-                return null; // Admin not found or incorrect password
-            }
-        }
+    public static Admin loginAdmin(Scanner sc) {
+        System.out.println("Please enter your admin username:");
+        String adminUserName = sc.next();
+        System.out.println("Please enter your admin password:");
+        String adminPassword = sc.next();
+        sc.nextLine(); // Consume newline
+        return UserUtils.getAdminByNameAndPassword(adminUserName, adminPassword);
     }
 }

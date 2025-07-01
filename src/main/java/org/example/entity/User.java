@@ -5,32 +5,24 @@ import lombok.Data;
 import java.util.List;
 
 @Data
-public class User {
+public abstract class User {
     String userName;
     String password;
     int userId;
 
-    public void post(String postContent, int userId, int directoryId) {
+    public abstract void post(String postContent, int userId, int directoryId);
 
-    }
+    public abstract void deletePost(int postId);
 
-    public void deletePost(int postId) {
+    public abstract void comment(String content, int userId, int postId);
 
-    }
+    public abstract void deleteComment(int commentId);
 
-    public void comment(String content, int userId, int postId) {
+    public abstract List<Post> getAllPosts();
 
-    }
+    public abstract List<Comment> getAllComments();
 
-    public void deleteComment(int commentId) {
+    public static User getUser(String userName, String password) {
 
-    }
-
-    public List<Post> getAllPosts() {
-        return null;
-    }
-
-    public List<Comment> getAllComments() {
-        return null;
     }
 }

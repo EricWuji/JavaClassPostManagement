@@ -14,10 +14,6 @@ public class Comment {
     int userId;
     boolean fromAdmin;
 
-    public Comment() {
-        // 构造函数不再需要初始化 mappers
-    }
-
     public void display() {
         try (SqlSession session = MyBatisUtil.getSession()) {
             // Display logic for the comment

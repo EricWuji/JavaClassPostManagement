@@ -95,4 +95,7 @@ public interface AdminMapper {
 
     @Update("update post set topped = 0 where post_id = #{postId}")
     void UntopPost(int postId);
+
+    @Select("select * from admin where admin_name=#{userName} and password = #{passwod}")
+    Admin getAdminByNameAndPassword(@Param("userName") String userName, @Param("password") String password);
 }

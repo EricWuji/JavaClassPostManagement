@@ -1,9 +1,10 @@
 package org.example.service;
 
-import org.apache.ibatis.session.SqlSession;
 import org.example.entity.NormalUser;
-import org.example.mapper.UserMapper;
-import org.example.utils.MyBatisUtil;
+import org.example.filter.Filter;
+import org.example.utils.DirectoryUtils;
+
+import java.util.Scanner;
 
 public class UserService extends Service {
 
@@ -14,7 +15,17 @@ public class UserService extends Service {
         this.user = user;
     }
 
-    public void tryToPost(String postContent, int directoryId) {
+    public void tryToPost(Scanner sc) {
+        System.out.println("Enter post content:");
+        String postContent = sc.nextLine();
+        postContent = Filter.filter(postContent);
+        System.out.println("Enter directory name:");
+        String directoryName = sc.nextLine();
+        Integer directoryId = DirectoryUtils.getDirectoryIdByName(directoryName);
+        if (directoryId == null) {
+            System.out.println("Directory not found.");
+            return ;
+        }
         if (postContent == null || postContent.isEmpty()) {
             System.out.println("Post content cannot be empty.");
             return;
@@ -31,18 +42,25 @@ public class UserService extends Service {
         System.out.println("Post created successfully.");
     }
 
-    public void joinDirectory(int directoryId) {
-        try (SqlSession session = MyBatisUtil.getSession()) {
-            UserMapper userMapper = session.getMapper(UserMapper.class);
-            userMapper.joinDirectory(user.getUserId(), directoryId);
-            session.commit();
-            System.out.println("Joined directory successfully.");
-        } catch (Exception e) {
-            System.out.println("Failed to join directory: " + e.getMessage());
+    public void joinDirectory(Scanner sc) {
+        System.out.println("Enter directory name to join:");
+        String directoryName = sc.nextLine();
+        Integer directoryId = DirectoryUtils.getDirectoryIdByName(directoryName);
+        if (directoryId != null) {
+            user.joinDirectory(directoryId);
+        } else {
+            System.out.println("Directory not found.");
         }
     }
 
-    public void LogoutFromDirectory(int directoryId) {
+    public void LogoutFromDirectory(Scanner sc) {
+        System.out.println("Enter directory name to logout:");
+        String directoryName = sc.nextLine();
+        Integer directoryId = DirectoryUtils.getDirectoryIdByName(directoryName);
+        if (directoryId == null) {
+            System.out.println("Directory not found");
+            return ;
+        }
         if (!user.hasJoinedDirectory(directoryId)) {
             System.out.println("You are not a member of this directory.");
             return;
