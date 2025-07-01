@@ -21,8 +21,4 @@ public abstract class User {
     public abstract List<Post> getAllPosts();
 
     public abstract List<Comment> getAllComments();
-
-    public static User getUser(String userName, String password) {
-
-    }
 }
